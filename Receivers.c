@@ -33,11 +33,11 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  if(packet.wipe_node == true){
+  if(packet.wipe_node == true && packet.sequence_number == 0){
     sequence_number = -1;
     parentSet = false;
 
-    printf("Wiping");
+    printf("Wiping node");
 
     packetbuf_copyfrom(&packet, sizeof(struct node_info));
     broadcast_send(&broadcast);
