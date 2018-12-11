@@ -23,7 +23,6 @@ static linkaddr_t sender;
 bool parentSet = false;
 
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
-  printf("broadcast message received from %d.%d:\n", from->u8[0], from->u8[1]);
 
   struct node_info *store = packetbuf_dataptr();
 
