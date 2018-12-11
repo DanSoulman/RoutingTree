@@ -3,6 +3,7 @@
 #include "contiki.h"
 #include "net/rime/rime.h"
 #include <stdio.h>
+#include "stdbool.h"
 
 PROCESS(example_unicast_process, "Example unicast");
 AUTOSTART_PROCESSES(&example_unicast_process);
@@ -14,8 +15,7 @@ struct node_info{
 };
 
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
-  printf("broadcast message received from %d.%d: '%s'\n",
-         from->u8[0], from->u8[1], (char *)packetbuf_dataptr());
+  printf("broadcast message received from %d.%d:\n", from->u8[0], from->u8[1]);
 
   linkaddr_t destination;
 

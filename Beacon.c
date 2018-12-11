@@ -3,6 +3,7 @@
 #include "net/rime/rime.h"
 #include "random.h"
 #include <stdio.h>
+#include "stdbool.h"
 
 /*---------------------------------------------------------------------------*/
 PROCESS(example_broadcast_process, "Broadcast example");
@@ -35,8 +36,6 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
    broadcast_open(&broadcast, 146, &broadcast_call);
 
    struct node_info packet;
-
-   struct node_info packet;
    int sequence_counter = 0;
    int wipe_counter = 0;
 
@@ -45,10 +44,27 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      etimer_set(&et, CLOCK_SECOND * 4); //+ random_rand() % (CLOCK_SECOND * 4));
      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
+     packet.hop = 0;
+     packet.sequence_number = sequence_counter;
+
+     packet.wipe_node = false;
+     if(wipe_counter > 15){
+       packet.wipe_node = true;
+     }
+
 	  //Sends out a broadcast saying hello.
      packetbuf_copyfrom(packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
+     if(wipe_counter > 15){
+       wipe_counter = 0;
+       sequence_counter = 0;
+       packet.wipe_node = false;
+     }
+     else{
+       wipe_counter += 1;
+       sequence_counter += 1;
+     }
    }
 
    PROCESS_END();
