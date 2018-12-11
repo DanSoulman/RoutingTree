@@ -51,8 +51,10 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      packet.wipe_node = false;
      if(wipe_counter > 15){
        packet.wipe_node = true;
+       printf("Wiping");
      }
-          printf("Broadcast message sent\n");
+    else
+      printf("Broadcast message sent\n");
      packetbuf_copyfrom(&packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
