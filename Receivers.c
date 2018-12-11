@@ -32,7 +32,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  if(sender == NULL){
+  if(sender.u8 == NULL){
     sender.u8[0] = from->u8[0];
     sender.u8[1] = from->u8[1];
 
@@ -46,7 +46,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   }
   else if(packet.sequence_number > sequence_number &&
    ((from->u8[0] == sender.u8[0]) && (from->u8[1] == sender.u8[1])){
-     
+
     sequence_number = packet.sequence_number;
 
     printf("Seq: %d, Hop: %d\n", packet.sequence_number, packet.hop);
