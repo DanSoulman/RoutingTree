@@ -18,7 +18,7 @@ static int sequence_number = -1;
 
 static struct broadcast_conn broadcast;
 
-static linkaddr_t sender = (linkaddr_t) NULL;
+static linkaddr_t sender;
 
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   printf("broadcast message received from %d.%d:\n", from->u8[0], from->u8[1]);
@@ -32,7 +32,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  if(sender == (linkaddr_t) NULL){
+  if(sender.u8[0] = (char) 0){
     sender.u8[0] = from->u8[0];
     sender.u8[1] = from->u8[1];
 
@@ -65,9 +65,12 @@ PROCESS_THREAD(example_unicast_process, ev, data){
   PROCESS_EXITHANDLER(broadcast_close(&broadcast);)
   PROCESS_BEGIN();
 
+
   //Opens Broad and Unicast on ports 146 and 140
   broadcast_open(&broadcast, 146, &broadcast_call);
 
+  sender.u8[0] = (char) 0;
+  sender.u8[1] = (char) 0;
 
   //Ends Process Thread
   PROCESS_END();
