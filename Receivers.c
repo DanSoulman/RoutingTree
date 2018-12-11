@@ -33,9 +33,12 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  if(packet.wipe_node == true && parentSet == true){
+  if(packet.wipe_node == true && sender.u8[0] == from->u8[0] && sender.u8[1] == from->u8[1]){
     sequence_number = -1;
     parentSet = false;
+
+    sender.u8[0] = 'a';
+    sender.u8[1] = 'b';
 
     printf("Wiping node");
 
