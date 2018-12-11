@@ -21,9 +21,9 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
 
   struct node_info packet;
 
-  packet.sequence_number = node_info->sequence_number;
-  packet.hop = node_info->hop;
-  packet.wipe_node = node_info->wipe_node;
+  packet.sequence_number = store->sequence_number;
+  packet.hop = store->hop;
+  packet.wipe_node = store->wipe_node;
 
   printf("Seq: %d, Hop: %d", packet.sequence_number, packet.hop);
 
@@ -42,7 +42,7 @@ PROCESS_THREAD(example_unicast_process, ev, data){
 
   //Opens Broad and Unicast on ports 146 and 140
   broadcast_open(&broadcast, 146, &broadcast_call);
-  
+
   while(1) {
 
   }
