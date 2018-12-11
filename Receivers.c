@@ -7,7 +7,11 @@
 PROCESS(example_unicast_process, "Example unicast");
 AUTOSTART_PROCESSES(&example_unicast_process);
 
-
+struct node_info{
+  int sequence_number;
+  int hop;
+  bool wipe_node;
+};
 
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   printf("broadcast message received from %d.%d: '%s'\n",

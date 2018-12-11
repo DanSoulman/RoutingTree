@@ -17,6 +17,11 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
 static const struct broadcast_callbacks broadcast_call = { broadcast_recv };
 static struct broadcast_conn broadcast;
 
+struct node_info{
+  int sequence_number;
+  int hop;
+  bool wipe_node;
+};
 
 //Runs a thread that loops a broadcast to the other nodes
 PROCESS_THREAD(example_broadcast_process, ev, data)
