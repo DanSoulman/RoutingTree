@@ -35,6 +35,8 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
    broadcast_open(&broadcast, 146, &broadcast_call);
 
    struct node_info packet;
+
+   struct node_info packet;
    int sequence_counter = 0;
    int wipe_counter = 0;
 
@@ -44,7 +46,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
 	  //Sends out a broadcast saying hello.
-     packetbuf_copyfrom("Hello", 6);
+     packetbuf_copyfrom(packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
    }
