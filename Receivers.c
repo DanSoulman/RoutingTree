@@ -45,29 +45,31 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
     packetbuf_copyfrom(&packet, sizeof(struct node_info));
     broadcast_send(&broadcast);
   }
+  else{
+    if(parentSet == false){
+      sender.u8[0] = from->u8[0];
+      sender.u8[1] = from->u8[1];
 
-  else if(parentSet == false){
-    sender.u8[0] = from->u8[0];
-    sender.u8[1] = from->u8[1];
+      sequence_number = packet.sequence_number;
 
-    sequence_number = packet.sequence_number;
+      printf("Seq: %d, Hop: %d\n", packet.sequence_number, packet.hop);
 
-    printf("Seq: %d, Hop: %d\n", packet.sequence_number, packet.hop);
+      parentSet = true;
 
-    parentSet = true;
+      packetbuf_copyfrom(&packet, sizeof(struct node_info));
+      broadcast_send(&broadcast);
 
-    packetbuf_copyfrom(&packet, sizeof(struct node_info));
-    broadcast_send(&broadcast);
+    }
+    
+    else if(packet.sequence_number > sequence_number && ((from->u8[0] == sender.u8[0]) && (from->u8[1] == sender.u8[1]))){
 
-  }
-  else if(packet.sequence_number > sequence_number && ((from->u8[0] == sender.u8[0]) && (from->u8[1] == sender.u8[1]))){
+      sequence_number = packet.sequence_number;
 
-    sequence_number = packet.sequence_number;
+      printf("Seq: %d, Hop: %d\n", packet.sequence_number, packet.hop);
 
-    printf("Seq: %d, Hop: %d\n", packet.sequence_number, packet.hop);
-
-    packetbuf_copyfrom(&packet, sizeof(struct node_info));
-    broadcast_send(&broadcast);
+      packetbuf_copyfrom(&packet, sizeof(struct node_info));
+      broadcast_send(&broadcast);
+    }
   }
 
 }
