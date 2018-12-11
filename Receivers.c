@@ -23,18 +23,18 @@ static linkaddr_t sender;
 
 bool parentSet = false;
 
+static struct node_info packet;
+
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
 
   struct node_info *store = packetbuf_dataptr();
-
-  struct node_info packet;
 
   packet.sequence_number = store->sequence_number;
   packet.hop = store->hop;
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  if(packet.wipe_node == true && sender.u8[0] == from->u8[0] && sender.u8[1] == from->u8[1]){
+  if(packet.wipe_node == true){
     sequence_number = -1;
     parentSet = false;
 
