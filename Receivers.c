@@ -18,7 +18,7 @@ static int sequence_number = -1;
 
 static struct broadcast_conn broadcast;
 
-static linkaddr_t sender = null;
+static linkaddr_t sender;
 
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   printf("broadcast message received from %d.%d:\n", from->u8[0], from->u8[1]);
