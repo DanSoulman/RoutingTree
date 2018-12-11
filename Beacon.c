@@ -6,22 +6,21 @@
 #include "stdbool.h"
 
 /*---------------------------------------------------------------------------*/
-PROCESS(example_broadcast_process, "Broadcast example");
+PROCESS(example_broadcast_process, "Beacon");
 AUTOSTART_PROCESSES(&example_broadcast_process);
 /*---------------------------------------------------------------------------*/
 
-//executes when the collector gets broadcast						           
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
 }
 
-//Tells collector which function to call when it gets a broadcast
 static const struct broadcast_callbacks broadcast_call = { broadcast_recv };
 static struct broadcast_conn broadcast;
 
+//Struct that holds the node info
 struct node_info{
   int sequence_number;
   int hop;
-  bool wipe_node;
+  bool wipe_node; //If you need to wipe the tree on this cycle
 };
 
 //Runs a thread that loops a broadcast to the other nodes
@@ -32,41 +31,42 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
    PROCESS_EXITHANDLER(broadcast_close(&broadcast);)
    PROCESS_BEGIN();
 
-   //Opens Broad and Unicast on ports 146 and 140
+   //Opens Broad on port 146
    broadcast_open(&broadcast, 146, &broadcast_call);
 
-   struct node_info packet;
+   struct node_info packet; //Creates instance of node info called packet
+
+   //Instansiates counters
    static int sequence_counter = 0;
-   int wipe_counter = 0;
 
    while(1) {
      // Delay for 4 seconds
-     etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND*4)); //+ random_rand() % (CLOCK_SECOND * 4));
-
+     etimer_set(&et, CLOCK_SECOND * 4; //+ random_rand() % (CLOCK_SECOND * 4));
      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
      packet.hop = 0;
      packet.sequence_number = sequence_counter;
-
      packet.wipe_node = false;
 
-     if(packet.sequence_number > 15){
+    //Once wipe limit has been reached
+    if(packet.sequence_number > 15){
        packet.wipe_node = true;
-       printf("Wiping");
+       printf("Wiping"); //For testing
      }
-    else
-      printf("Broadcast message sent\n");
-     packetbuf_copyfrom(&packet, sizeof(struct node_info));
-     broadcast_send(&broadcast);
 
-     if(packet.sequence_number > 15){
-       wipe_counter = 0;
-       sequence_counter = 0;
-       packet.wipe_node = false;
+    else //Shows message sent
+      printf("Broadcast message sent\n");
+
+    packetbuf_copyfrom(&packet, sizeof(struct node_info));
+    broadcast_send(&broadcast);
+
+    if(sequence_counter > 15){ //If it goes past the limit it wipes everything
+      sequence_counter = 0;
+      packet.wipe_node = false;
      }
-     else{
-       wipe_counter += 1;
-       sequence_counter += 1;
+
+    else{ //Otherwise it increments
+      sequence_counter += 1;
      }
 
    }
