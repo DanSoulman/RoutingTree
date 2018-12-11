@@ -28,7 +28,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.wipe_node = store->wipe_node;
   packet.hop +=1 ;
 
-  printf("Seq: %d, Hop: %d", store -> sequence_number, store -> hop);
+  printf("Seq: %d, Hop: %d\n", store -> sequence_number, store -> hop);
 
   packetbuf_copyfrom(&packet, sizeof(struct node_info));
   broadcast_send(&broadcast);
