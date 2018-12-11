@@ -49,7 +49,8 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      packet.sequence_number = sequence_counter;
 
      packet.wipe_node = false;
-     if(wipe_counter > 15){
+
+     if(packet.sequence_number > 15){
        packet.wipe_node = true;
        printf("Wiping");
      }
@@ -58,7 +59,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      packetbuf_copyfrom(&packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
-     if(wipe_counter > 15){
+     if(packet.sequence_number > 15){
        wipe_counter = 0;
        sequence_counter = 0;
        packet.wipe_node = false;
