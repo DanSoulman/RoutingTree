@@ -53,7 +53,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      }
 
 	  //Sends out a broadcast saying hello.
-     packetbuf_copyfrom(packet, sizeof(struct node_info));
+     packetbuf_copyfrom(&packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
      if(wipe_counter > 15){
