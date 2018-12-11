@@ -33,7 +33,7 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.hop +=1 ;
 
   if(packet.sequence_number > sequence_number){
-    sequence_number = packet->sequence_number;
+    sequence_number = packet.sequence_number;
 
     sender.u8[0] = from->u8[0];
     sender.u8[1] = from->u8[1];
