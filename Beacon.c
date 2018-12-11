@@ -52,7 +52,6 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
        packet.wipe_node = true;
      }
 
-	  //Sends out a broadcast saying hello.
      packetbuf_copyfrom(&packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
@@ -65,6 +64,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
        wipe_counter += 1;
        sequence_counter += 1;
      }
+     printf("Broadcast message sent");
    }
 
    PROCESS_END();
