@@ -14,6 +14,8 @@ struct node_info{
   bool wipe_node;
 };
 
+static struct broadcast_conn broadcast;
+
 static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   printf("broadcast message received from %d.%d:\n", from->u8[0], from->u8[1]);
 
@@ -24,16 +26,18 @@ static void broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from){
   packet.sequence_number = store->sequence_number;
   packet.hop = store->hop;
   packet.wipe_node = store->wipe_node;
+  packet.hop +=1 ;
 
-  printf("Seq: %d, Hop: %d", packet.sequence_number, packet.hop);
+  printf("Seq: %d, Hop: %d", store -> sequence_number, store -> hop);
 
-  linkaddr_t destination;
+  packetbuf_copyfrom(&packet, sizeof(struct node_info));
+  broadcast_send(&broadcast);
 
 }
 
  //lets collector know which function to do when broadcast is received
  static const struct broadcast_callbacks broadcast_call = { broadcast_recv };
- static struct broadcast_conn broadcast;
+
 
 PROCESS_THREAD(example_unicast_process, ev, data){
 
@@ -43,9 +47,6 @@ PROCESS_THREAD(example_unicast_process, ev, data){
   //Opens Broad and Unicast on ports 146 and 140
   broadcast_open(&broadcast, 146, &broadcast_call);
 
-  while(1) {
-
-  }
 
   //Ends Process Thread
   PROCESS_END();

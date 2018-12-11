@@ -36,12 +36,13 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
    broadcast_open(&broadcast, 146, &broadcast_call);
 
    struct node_info packet;
-   int sequence_counter = 0;
+   static int sequence_counter = 0;
    int wipe_counter = 0;
 
    while(1) {
      // Delay for 4 seconds
-     etimer_set(&et, CLOCK_SECOND * 4); //+ random_rand() % (CLOCK_SECOND * 4));
+     etimer_set(&et, CLOCK_SECOND * 4 + random_rand() % (CLOCK_SECOND*4)); //+ random_rand() % (CLOCK_SECOND * 4));
+
      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
      packet.hop = 0;
@@ -51,7 +52,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
      if(wipe_counter > 15){
        packet.wipe_node = true;
      }
-
+          printf("Broadcast message sent\n");
      packetbuf_copyfrom(&packet, sizeof(struct node_info));
      broadcast_send(&broadcast);
 
@@ -64,7 +65,7 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
        wipe_counter += 1;
        sequence_counter += 1;
      }
-     printf("Broadcast message sent");
+
    }
 
    PROCESS_END();
