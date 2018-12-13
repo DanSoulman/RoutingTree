@@ -57,6 +57,11 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
       //Indicates the system is to be wiped
        packet.wipe_node = true;
        printf("Wiping"); //For testing
+       sequence_counter = 0;
+     }
+     //Sequence increments 
+     else{ 
+       sequence_counter += 1;
      }
 
     else //Shows that broadcast has been sent out, expect the nodes to start returning info
@@ -67,19 +72,8 @@ PROCESS_THREAD(example_broadcast_process, ev, data)
     packetbuf_copyfrom(&packet, sizeof(struct node_info));
     //Sends the broadcast specified above
     broadcast_send(&broadcast);
-
-    //If it goes past the limit (15) it wipes everything
-    if(sequence_counter > 15){
-      sequence_counter = 0;
-      packet.wipe_node = false;
-     }
-
-    //Otherwise it increments the sequence number and starts again
-    else{ 
-      sequence_counter += 1;
-     }
-
-   }
+    
+    }
 
    PROCESS_END();
 
